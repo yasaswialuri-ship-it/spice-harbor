@@ -1,0 +1,1709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spice Harbor - Multicuisine Restaurant</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #d97706;
+            --primary-dark: #b45309;
+            --secondary: #dc2626;
+            --accent: #059669;
+            --bg-light: #ffffff;
+            --bg-dark: #0f172a;
+            --text-light: #1e293b;
+            --text-dark: #f1f5f9;
+            --card-light: #f8fafc;
+            --card-dark: #1e293b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-light);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        body.dark-mode {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        /* Navbar */
+        .navbar {
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+
+        body.dark-mode .navbar {
+            background: rgba(15, 23, 42, 0.95);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: inherit;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: inherit;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+    position: relative;
+    height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-image: url("images/resturant-background.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    overflow: hidden;
+}
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            color: white;
+            max-width: 800px;
+            padding: 2rem;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero .tagline {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(217, 119, 6, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+        }
+
+        /* Floating Food Images */
+        .floating-food {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-food:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-food:nth-child(2) {
+            top: 60%;
+            left: 15%;
+            animation-delay: 1s;
+        }
+
+        .floating-food:nth-child(3) {
+            top: 20%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        .floating-food:nth-child(4) {
+            bottom: 15%;
+            right: 15%;
+            animation-delay: 3s;
+        }
+
+        /* Sections */
+        .section {
+            padding: 5rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        /* Menu Grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .menu-card {
+            background: var(--card-light);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        body.dark-mode .menu-card {
+            background: var(--card-dark);
+        }
+
+        .menu-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .menu-card-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-card-content {
+            padding: 1.5rem;
+        }
+
+        .menu-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            color: inherit;
+        }
+
+        .menu-card .price {
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: 700;
+            margin: 0.5rem 0;
+        }
+
+        .menu-card .category {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .add-to-cart-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .add-to-cart-btn:hover {
+            background: #047857;
+            transform: scale(1.05);
+        }
+
+        /* Cart */
+        .floating-cart-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            box-shadow: 0 10px 30px rgba(217, 119, 6, 0.4);
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+            z-index: 999;
+        }
+
+        .floating-cart-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--secondary);
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .cart-page {
+            min-height: 80vh;
+            padding: 3rem 2rem;
+        }
+
+        .cart-items {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 2rem;
+            padding: 2rem;
+            background: var(--card-light);
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+            align-items: center;
+        }
+
+        body.dark-mode .cart-item {
+            background: var(--card-dark);
+        }
+
+        .cart-item-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .quantity-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            background: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .quantity-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .cart-summary {
+            max-width: 500px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background: var(--card-light);
+            border-radius: 15px;
+        }
+
+        body.dark-mode .cart-summary {
+            background: var(--card-dark);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 1rem 0;
+            font-size: 1.1rem;
+        }
+
+        .summary-row.total {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            border-top: 2px solid var(--border);
+            padding-top: 1rem;
+        }
+
+        /* Form Styles */
+        .form-container {
+            max-width: 600px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background: var(--card-light);
+            border-radius: 20px;
+        }
+
+        body.dark-mode .form-container {
+            background: var(--card-dark);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            background: var(--bg-light);
+            color: var(--text-light);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        body.dark-mode .form-group input,
+        body.dark-mode .form-group select,
+        body.dark-mode .form-group textarea {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+            border-color: #334155;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Map */
+        .map-container {
+            width: 100%;
+            height: 500px;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-top: 2rem;
+            background: var(--card-light);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--text-light);
+            color: white;
+            padding: 3rem 2rem;
+            margin-top: 5rem;
+        }
+
+        body.dark-mode .footer {
+            background: #0a0f1a;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+
+        .footer h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-3px);
+            background: var(--primary-dark);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: inherit;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+
+            .floating-food {
+                display: none;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* Success Message */
+        .success-message {
+            max-width: 600px;
+            margin: 5rem auto;
+            text-align: center;
+            padding: 3rem;
+            background: var(--card-light);
+            border-radius: 20px;
+        }
+
+        body.dark-mode .success-message {
+            background: var(--card-dark);
+        }
+
+        .success-icon {
+            font-size: 5rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        /* Payment Options */
+        .payment-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .payment-option {
+            padding: 1.5rem;
+            border: 2px solid var(--border);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .payment-option:hover {
+            border-color: var(--primary);
+            background: rgba(217, 119, 6, 0.05);
+        }
+
+        .payment-option.selected {
+            border-color: var(--primary);
+            background: rgba(217, 119, 6, 0.1);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 9999;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateX(-50%) translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .category-filter {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .category-btn {
+            padding: 0.7rem 1.5rem;
+            border: 2px solid var(--border);
+            background: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            color: inherit;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 5rem 2rem;
+        }
+
+        .empty-cart-icon {
+            font-size: 5rem;
+            color: var(--border);
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Menu Data
+        // 📸 TO ADD YOUR OWN IMAGES:
+        // 1. Create a folder named "images" in the same location as this HTML file
+        // 2. Add your food photos with these exact names (or update the names below)
+        // 3. If image file doesn't exist, it will show a placeholder color
+        
+        const menuData = [
+            // Starters
+            { id: 1, name: 'Veg Manchurian', price: 180, category: 'Starters', emoji: '🥘', image: 'images/veg-manchurian.jpg', available: true },
+            { id: 2, name: 'Paneer 65', price: 210, category: 'Starters', emoji: '🧀', image: 'images/paneer-65.jpg', available: true },
+            { id: 3, name: 'Chicken Lollipop', price: 260, category: 'Starters', emoji: '🍗', image: 'images/chicken-lollipop.jpg', available: true },
+            { id: 4, name: 'Crispy Corn', price: 170, category: 'Starters', emoji: '🌽', image: 'images/crispy-corn.jpg', available: true },
+            
+            // Main Course
+            { id: 5, name: 'Butter Chicken', price: 260, category: 'Main Course', emoji: '🍛', image: 'images/butter-chicken.jpg', available: true },
+            { id: 6, name: 'Paneer Butter Masala', price: 240, category: 'Main Course', emoji: '🍲', image: 'images/paneer-butter-masala.jpg', available: true },
+            { id: 7, name: 'Veg Kadai', price: 220, category: 'Main Course', emoji: '🥘', image: 'images/veg-kadai.jpg', available: true },
+            { id: 8, name: 'Chicken Curry', price: 250, category: 'Main Course', emoji: '🍛', image: 'images/chicken-curry.jpg', available: true },
+            
+            // Biryani
+            { id: 9, name: 'Chicken Dum Biryani', price: 279, category: 'Biryani', emoji: '🍚', image: 'images/chicken-biryani.jpg', available: true, featured: true },
+            { id: 10, name: 'Mutton Biryani', price: 349, category: 'Biryani', emoji: '🍛', image: 'images/mutton-biryani.jpg', available: true },
+            { id: 11, name: 'Veg Biryani', price: 220, category: 'Biryani', emoji: '🍚', image: 'images/veg-biryani.jpg', available: true },
+            { id: 12, name: 'Egg Biryani', price: 230, category: 'Biryani', emoji: '🥚', image: 'images/egg-biryani.jpg', available: true },
+            
+            // Fast Food
+            { id: 13, name: 'Farmhouse Pizza', price: 320, category: 'Fast Food', emoji: '🍕', image: 'images/farmhouse-pizza.jpg', available: true, featured: true },
+            { id: 14, name: 'Cheese Burger', price: 180, category: 'Fast Food', emoji: '🍔', image: 'images/cheese-burger.jpg', available: true },
+            { id: 15, name: 'White Sauce Pasta', price: 260, category: 'Fast Food', emoji: '🍝', image: 'images/white-sauce-pasta.jpg', available: true },
+            { id: 16, name: 'French Fries', price: 120, category: 'Fast Food', emoji: '🍟', image: 'images/french-fries.jpg', available: true },
+            
+            // Beverages
+            { id: 17, name: 'Cold Coffee', price: 140, category: 'Beverages', emoji: '☕', image: 'images/cold-coffee.jpg', available: true },
+            { id: 18, name: 'Fresh Lime Soda', price: 90, category: 'Beverages', emoji: '🍋', image: 'images/lime-soda.jpg', available: true },
+            { id: 19, name: 'Mint Mojito', price: 99, category: 'Beverages', emoji: '🍹', image: 'images/mint-mojito.jpg', available: true, featured: true },
+            { id: 20, name: 'Soft Drinks', price: 60, category: 'Beverages', emoji: '🥤', image: 'images/soft-drinks.jpg', available: true },
+        ];
+
+        // Today's Special
+        const todaysSpecial = menuData.filter(item => item.featured);
+
+        // Navbar Component
+        function Navbar({ darkMode, toggleDarkMode, currentPage, setCurrentPage, cartCount }) {
+            return (
+                <nav className="navbar">
+                    <div className="nav-container">
+                        <div className="logo">
+                            <i className="fas fa-fire"></i>
+                            Spice Harbor
+                        </div>
+                        <ul className="nav-links">
+                            <li><a href="#" onClick={() => setCurrentPage('home')}>Home</a></li>
+                            <li><a href="#" onClick={() => setCurrentPage('menu')}>Menu</a></li>
+                            <li><a href="#" onClick={() => setCurrentPage('special')}>Today's Special</a></li>
+                            <li><a href="#" onClick={() => setCurrentPage('about')}>About</a></li>
+                            <li><a href="#" onClick={() => setCurrentPage('reservation')}>Reserve Table</a></li>
+                            <li><a href="#" onClick={() => setCurrentPage('contact')}>Contact</a></li>
+                            <li>
+                                <button className="theme-toggle" onClick={toggleDarkMode}>
+                                    <i className={`fas fa-${darkMode ? 'sun' : 'moon'}`}></i>
+                                </button>
+                            </li>
+                        </ul>
+                        <button className="mobile-menu-btn">
+                            <i className="fas fa-bars"></i>
+                        </button>
+                    </div>
+                </nav>
+            );
+        }
+
+        // Hero Component
+        function Hero({ setCurrentPage }) {
+            return (
+                <section className="hero">
+                    <div className="floating-food">🍕</div>
+                    <div className="floating-food">🍔</div>
+                    <div className="floating-food">🍛</div>
+                    <div className="floating-food">🍹</div>
+                    
+                    <div className="hero-content">
+                        <h1>Welcome to Spice Harbor</h1>
+                        <p className="tagline">Fresh Flavors • Fast Service • Family Dining</p>
+                        <div className="cta-buttons">
+                            <button className="btn btn-primary" onClick={() => setCurrentPage('menu')}>
+                                View Menu
+                            </button>
+                            <button className="btn btn-secondary" onClick={() => setCurrentPage('reservation')}>
+                                Reserve Table
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // Menu Card Component
+        function MenuCard({ item, addToCart }) {
+            const [imageError, setImageError] = React.useState(false);
+            
+            return (
+                <div className="menu-card">
+                    <div className="menu-card-image">
+                        {!imageError && item.image ? (
+                            <img 
+                                src={item.image} 
+                                alt={item.name}
+                                onError={() => setImageError(true)}
+                                style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'cover'
+                                }}
+                            />
+                        ) : (
+                            <span>{item.emoji}</span>
+                        )}
+                    </div>
+                    <div className="menu-card-content">
+                        <span className="category">{item.category}</span>
+                        <h3>{item.name}</h3>
+                        <div className="price">₹{item.price}</div>
+                        <button className="add-to-cart-btn" onClick={() => addToCart(item)}>
+                            <i className="fas fa-shopping-cart"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        // Menu Page
+        function MenuPage({ addToCart }) {
+            const [selectedCategory, setSelectedCategory] = useState('All');
+            const categories = ['All', ...new Set(menuData.map(item => item.category))];
+            
+            const filteredMenu = selectedCategory === 'All' 
+                ? menuData 
+                : menuData.filter(item => item.category === selectedCategory);
+
+            return (
+                <div className="section">
+                    <div className="section-header">
+                        <h2>Our Menu</h2>
+                        <p>Explore our delicious multicuisine offerings</p>
+                    </div>
+                    
+                    <div className="category-filter">
+                        {categories.map(cat => (
+                            <button 
+                                key={cat}
+                                className={`category-btn ${selectedCategory === cat ? 'active' : ''}`}
+                                onClick={() => setSelectedCategory(cat)}
+                            >
+                                {cat}
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="menu-grid">
+                        {filteredMenu.map(item => (
+                            <MenuCard key={item.id} item={item} addToCart={addToCart} />
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        // Today's Special Page
+        function TodaysSpecialPage({ addToCart }) {
+            return (
+                <div className="section">
+                    <div className="section-header">
+                        <h2>Today's Special</h2>
+                        <p>Don't miss our chef's special picks for today!</p>
+                    </div>
+                    
+                    <div className="menu-grid">
+                        {todaysSpecial.map(item => (
+                            <MenuCard key={item.id} item={item} addToCart={addToCart} />
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        // About Page
+        function AboutPage() {
+            return (
+                <div className="section">
+                    <div className="section-header">
+                        <h2>About Spice Harbor</h2>
+                        <p>Our Story, Mission & Values</p>
+                    </div>
+                    
+                    <div style={{ maxWidth: '800px', margin: '0 auto', lineHeight: '1.8', fontSize: '1.1rem' }}>
+                        <p style={{ marginBottom: '1.5rem' }}>
+                            Spice Harbor is a modern multicuisine restaurant serving Indian, Chinese, and Continental dishes. 
+                            Founded in 2021, Spice Harbor focuses on fresh ingredients, hygienic kitchens, and fast service.
+                        </p>
+                        
+                        <p style={{ marginBottom: '1.5rem' }}>
+                            Customers can dine in, reserve tables, and order food online with fast delivery. We pride ourselves 
+                            on creating memorable dining experiences for families, friends, and food lovers.
+                        </p>
+                        
+                        <div style={{ 
+                            background: 'var(--card-light)', 
+                            padding: '2rem', 
+                            borderRadius: '15px', 
+                            marginTop: '2rem',
+                            borderLeft: '4px solid var(--primary)'
+                        }}>
+                            <h3 style={{ color: 'var(--primary)', marginBottom: '1rem' }}>Our Mission</h3>
+                            <p>Deliver premium taste with affordable pricing and excellent service.</p>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Cart Page
+        function CartPage({ cart, updateQuantity, removeFromCart, setCurrentPage }) {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const gst = subtotal * 0.05;
+            const delivery = cart.length > 0 ? 40 : 0;
+            const total = subtotal + gst + delivery;
+
+            if (cart.length === 0) {
+                return (
+                    <div className="empty-cart">
+                        <div className="empty-cart-icon">
+                            <i className="fas fa-shopping-cart"></i>
+                        </div>
+                        <h2>Your cart is empty</h2>
+                        <p>Add some delicious items to get started!</p>
+                        <button className="btn btn-primary" onClick={() => setCurrentPage('menu')} style={{ marginTop: '2rem' }}>
+                            Browse Menu
+                        </button>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="cart-page">
+                    <div className="section-header">
+                        <h2>Your Cart</h2>
+                        <p>Review your items before checkout</p>
+                    </div>
+
+                    <div className="cart-items">
+                        {cart.map(item => (
+                            <div key={item.id} className="cart-item">
+                                <div className="cart-item-image">
+                                    {item.image ? (
+                                        <img 
+                                            src={item.image} 
+                                            alt={item.name}
+                                            style={{
+                                                width: '100%',
+                                                height: '100%',
+                                                objectFit: 'cover',
+                                                borderRadius: '15px'
+                                            }}
+                                            onError={(e) => {
+                                                e.target.style.display = 'none';
+                                                e.target.nextSibling.style.display = 'flex';
+                                            }}
+                                        />
+                                    ) : null}
+                                    <span style={{ display: item.image ? 'none' : 'flex' }}>{item.emoji}</span>
+                                </div>
+                                <div className="cart-item-details">
+                                    <h3>{item.name}</h3>
+                                    <p style={{ color: 'var(--primary)', fontWeight: 'bold' }}>₹{item.price}</p>
+                                    <div className="quantity-controls">
+                                        <button className="quantity-btn" onClick={() => updateQuantity(item.id, -1)}>
+                                            -
+                                        </button>
+                                        <span style={{ fontSize: '1.2rem', fontWeight: 'bold', minWidth: '40px', textAlign: 'center' }}>
+                                            {item.quantity}
+                                        </span>
+                                        <button className="quantity-btn" onClick={() => updateQuantity(item.id, 1)}>
+                                            +
+                                        </button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button 
+                                        className="btn btn-secondary" 
+                                        onClick={() => removeFromCart(item.id)}
+                                        style={{ background: 'var(--secondary)', color: 'white' }}
+                                    >
+                                        <i className="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="cart-summary">
+                        <h3 style={{ marginBottom: '1.5rem' }}>Order Summary</h3>
+                        <div className="summary-row">
+                            <span>Subtotal</span>
+                            <span>₹{subtotal.toFixed(2)}</span>
+                        </div>
+                        <div className="summary-row">
+                            <span>GST (5%)</span>
+                            <span>₹{gst.toFixed(2)}</span>
+                        </div>
+                        <div className="summary-row">
+                            <span>Delivery Charge</span>
+                            <span>₹{delivery.toFixed(2)}</span>
+                        </div>
+                        <div className="summary-row total">
+                            <span>Total</span>
+                            <span>₹{total.toFixed(2)}</span>
+                        </div>
+                        <button 
+                            className="btn btn-primary" 
+                            style={{ width: '100%', marginTop: '1.5rem' }}
+                            onClick={() => setCurrentPage('checkout')}
+                        >
+                            Proceed to Checkout
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        // Checkout Page
+        function CheckoutPage({ cart, clearCart, setCurrentPage }) {
+            const [step, setStep] = useState(1); // 1 = Address, 2 = Payment
+            const [addressData, setAddressData] = useState({
+                name: '',
+                phone: '',
+                email: '',
+                street: '',
+                city: '',
+                state: '',
+                pincode: ''
+            });
+            const [paymentMethod, setPaymentMethod] = useState('');
+            const [orderPlaced, setOrderPlaced] = useState(false);
+            const [orderId, setOrderId] = useState('');
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0) * 1.05 + 40;
+
+            const handleAddressSubmit = (e) => {
+                e.preventDefault();
+                setStep(2);
+            };
+
+            const handlePayment = () => {
+                const newOrderId = 'SH' + Date.now().toString().slice(-8);
+                setOrderId(newOrderId);
+                setOrderPlaced(true);
+                clearCart();
+            };
+
+            if (orderPlaced) {
+                return (
+                    <div className="success-message">
+                        <div className="success-icon">
+                            <i className="fas fa-check-circle"></i>
+                        </div>
+                        <h2>Order Placed Successfully!</h2>
+                        <p style={{ margin: '1rem 0', fontSize: '1.2rem' }}>
+                            Order ID: <strong>{orderId}</strong>
+                        </p>
+                        <p>Your delicious food will be delivered soon!</p>
+                        <p style={{ marginTop: '1rem', color: 'var(--primary)' }}>
+                            Delivering to: {addressData.street}, {addressData.city}
+                        </p>
+                        <button 
+                            className="btn btn-primary" 
+                            onClick={() => setCurrentPage('home')}
+                            style={{ marginTop: '2rem' }}
+                        >
+                            Back to Home
+                        </button>
+                    </div>
+                );
+            }
+
+            // Step 1: Address Form
+            if (step === 1) {
+                return (
+                    <div className="section">
+                        <div className="section-header">
+                            <h2>Delivery Address</h2>
+                            <p>Please provide your delivery details</p>
+                        </div>
+
+                        <form className="form-container" onSubmit={handleAddressSubmit}>
+                            <div className="form-group">
+                                <label>Full Name *</label>
+                                <input 
+                                    type="text" 
+                                    required 
+                                    value={addressData.name}
+                                    onChange={(e) => setAddressData({...addressData, name: e.target.value})}
+                                    placeholder="Enter your full name"
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label>Phone Number *</label>
+                                <input 
+                                    type="tel" 
+                                    required 
+                                    pattern="[0-9]{10}"
+                                    value={addressData.phone}
+                                    onChange={(e) => setAddressData({...addressData, phone: e.target.value})}
+                                    placeholder="10 digit mobile number"
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label>Email Address *</label>
+                                <input 
+                                    type="email" 
+                                    required 
+                                    value={addressData.email}
+                                    onChange={(e) => setAddressData({...addressData, email: e.target.value})}
+                                    placeholder="your@email.com"
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label>Street Address *</label>
+                                <input 
+                                    type="text" 
+                                    required 
+                                    value={addressData.street}
+                                    onChange={(e) => setAddressData({...addressData, street: e.target.value})}
+                                    placeholder="House/Flat No., Street Name"
+                                />
+                            </div>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                <div className="form-group">
+                                    <label>City *</label>
+                                    <input 
+                                        type="text" 
+                                        required 
+                                        value={addressData.city}
+                                        onChange={(e) => setAddressData({...addressData, city: e.target.value})}
+                                        placeholder="City"
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label>State *</label>
+                                    <input 
+                                        type="text" 
+                                        required 
+                                        value={addressData.state}
+                                        onChange={(e) => setAddressData({...addressData, state: e.target.value})}
+                                        placeholder="State"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="form-group">
+                                <label>Pincode *</label>
+                                <input 
+                                    type="text" 
+                                    required 
+                                    pattern="[0-9]{6}"
+                                    value={addressData.pincode}
+                                    onChange={(e) => setAddressData({...addressData, pincode: e.target.value})}
+                                    placeholder="6 digit pincode"
+                                />
+                            </div>
+
+                            <div style={{ marginTop: '2rem', padding: '1.5rem', background: 'rgba(217, 119, 6, 0.1)', borderRadius: '10px' }}>
+                                <h3>Order Total: ₹{total.toFixed(2)}</h3>
+                            </div>
+
+                            <button 
+                                type="submit" 
+                                className="btn btn-primary" 
+                                style={{ width: '100%', marginTop: '2rem' }}
+                            >
+                                Continue to Payment
+                            </button>
+                        </form>
+                    </div>
+                );
+            }
+
+            // Step 2: Payment
+            return (
+                <div className="section">
+                    <div className="section-header">
+                        <h2>Payment</h2>
+                        <p>Select your payment method</p>
+                    </div>
+
+                    <div className="form-container">
+                        <div style={{ 
+                            padding: '1rem', 
+                            background: 'var(--card-light)', 
+                            borderRadius: '10px', 
+                            marginBottom: '2rem',
+                            border: '2px solid var(--border)'
+                        }}>
+                            <h4 style={{ marginBottom: '0.5rem' }}>Delivering to:</h4>
+                            <p style={{ margin: '0.3rem 0' }}><strong>{addressData.name}</strong></p>
+                            <p style={{ margin: '0.3rem 0' }}>{addressData.phone}</p>
+                            <p style={{ margin: '0.3rem 0' }}>{addressData.street}, {addressData.city}</p>
+                            <p style={{ margin: '0.3rem 0' }}>{addressData.state} - {addressData.pincode}</p>
+                            <button 
+                                onClick={() => setStep(1)}
+                                style={{ 
+                                    marginTop: '0.5rem',
+                                    background: 'none',
+                                    border: 'none',
+                                    color: 'var(--primary)',
+                                    cursor: 'pointer',
+                                    textDecoration: 'underline',
+                                    fontSize: '0.9rem'
+                                }}
+                            >
+                                Change Address
+                            </button>
+                        </div>
+
+                        <h3>Select Payment Method</h3>
+                        <div className="payment-options">
+                            <div 
+                                className={`payment-option ${paymentMethod === 'upi' ? 'selected' : ''}`}
+                                onClick={() => setPaymentMethod('upi')}
+                            >
+                                <i className="fas fa-mobile-alt" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}></i>
+                                <p>UPI</p>
+                            </div>
+                            <div 
+                                className={`payment-option ${paymentMethod === 'card' ? 'selected' : ''}`}
+                                onClick={() => setPaymentMethod('card')}
+                            >
+                                <i className="fas fa-credit-card" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}></i>
+                                <p>Card</p>
+                            </div>
+                            <div 
+                                className={`payment-option ${paymentMethod === 'netbanking' ? 'selected' : ''}`}
+                                onClick={() => setPaymentMethod('netbanking')}
+                            >
+                                <i className="fas fa-university" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}></i>
+                                <p>Net Banking</p>
+                            </div>
+                            <div 
+                                className={`payment-option ${paymentMethod === 'wallet' ? 'selected' : ''}`}
+                                onClick={() => setPaymentMethod('wallet')}
+                            >
+                                <i className="fas fa-wallet" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}></i>
+                                <p>Wallet</p>
+                            </div>
+                        </div>
+
+                        <div style={{ marginTop: '2rem', padding: '1.5rem', background: 'rgba(217, 119, 6, 0.1)', borderRadius: '10px' }}>
+                            <h3>Total Amount: ₹{total.toFixed(2)}</h3>
+                        </div>
+
+                        <button 
+                            className="btn btn-primary" 
+                            style={{ width: '100%', marginTop: '2rem' }}
+                            onClick={handlePayment}
+                            disabled={!paymentMethod}
+                        >
+                            Complete Payment (Test Mode)
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        // Reservation Page
+        function ReservationPage() {
+            const [formData, setFormData] = useState({
+                name: '',
+                phone: '',
+                email: '',
+                date: '',
+                time: '',
+                guests: '',
+                request: ''
+            });
+            const [submitted, setSubmitted] = useState(false);
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                setSubmitted(true);
+            };
+
+            if (submitted) {
+                return (
+                    <div className="success-message">
+                        <div className="success-icon">
+                            <i className="fas fa-calendar-check"></i>
+                        </div>
+                        <h2>Reservation Confirmed!</h2>
+                        <p>We've sent a confirmation to {formData.email}</p>
+                        <p>Looking forward to serving you!</p>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="section">
+                    <div className="section-header">
+                        <h2>Reserve a Table</h2>
+                        <p>Book your dining experience</p>
+                    </div>
+
+                    <form className="form-container" onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label>Name *</label>
+                            <input 
+                                type="text" 
+                                required 
+                                value={formData.name}
+                                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label>Phone *</label>
+                            <input 
+                                type="tel" 
+                                required 
+                                value={formData.phone}
+                                onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label>Email *</label>
+                            <input 
+                                type="email" 
+                                required 
+                                value={formData.email}
+                                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label>Date *</label>
+                            <input 
+                                type="date" 
+                                required 
+                                value={formData.date}
+                                onChange={(e) => setFormData({...formData, date: e.target.value})}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label>Time *</label>
+                            <input 
+                                type="time" 
+                                required 
+                                value={formData.time}
+                                onChange={(e) => setFormData({...formData, time: e.target.value})}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label>Number of Guests *</label>
+                            <select 
+                                required 
+                                value={formData.guests}
+                                onChange={(e) => setFormData({...formData, guests: e.target.value})}
+                            >
+                                <option value="">Select</option>
+                                {[1,2,3,4,5,6,7,8].map(n => (
+                                    <option key={n} value={n}>{n} {n === 1 ? 'Guest' : 'Guests'}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="form-group">
+                            <label>Special Requests</label>
+                            <textarea 
+                                rows="4"
+                                value={formData.request}
+                                onChange={(e) => setFormData({...formData, request: e.target.value})}
+                            ></textarea>
+                        </div>
+
+                        <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
+                            Confirm Reservation
+                        </button>
+                    </form>
+                </div>
+            );
+        }
+
+        // Contact Page
+        function ContactPage() {
+            return (
+                <div className="section">
+                    <div className="section-header">
+                        <h2>Contact Us</h2>
+                        <p>We'd love to hear from you</p>
+                    </div>
+
+                    <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem', marginBottom: '3rem' }}>
+                            <div style={{ textAlign: 'center', padding: '2rem', background: 'var(--card-light)', borderRadius: '15px' }}>
+                                <i className="fas fa-map-marker-alt" style={{ fontSize: '2.5rem', color: 'var(--primary)', marginBottom: '1rem' }}></i>
+                                <h3>Address</h3>
+                                <p>Orion Plaza, Madhapur Main Road<br/>Hyderabad, Telangana 500081</p>
+                            </div>
+
+                            <div style={{ textAlign: 'center', padding: '2rem', background: 'var(--card-light)', borderRadius: '15px' }}>
+                                <i className="fas fa-phone" style={{ fontSize: '2.5rem', color: 'var(--primary)', marginBottom: '1rem' }}></i>
+                                <h3>Phone</h3>
+                                <p>+91 9876543210<br/>+91 9876543211</p>
+                            </div>
+
+                            <div style={{ textAlign: 'center', padding: '2rem', background: 'var(--card-light)', borderRadius: '15px' }}>
+                                <i className="fas fa-envelope" style={{ fontSize: '2.5rem', color: 'var(--primary)', marginBottom: '1rem' }}></i>
+                                <h3>Email</h3>
+                                <p>info@spiceharbor.com<br/>orders@spiceharbor.com</p>
+                            </div>
+                        </div>
+
+                        <div className="map-container">
+                            <iframe 
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.3907267252665!2d78.38928431487747!3d17.448300688045643!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9157edfc9773%3A0x6e5df8e38038329!2sMadhapur%2C%20Hyderabad%2C%20Telangana!5e0!3m2!1sen!2sin!4v1234567890"
+                                width="100%" 
+                                height="100%" 
+                                style={{ border: 0 }} 
+                                allowFullScreen="" 
+                                loading="lazy"
+                            ></iframe>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Footer Component
+        function Footer() {
+            return (
+                <footer className="footer">
+                    <div className="footer-content">
+                        <div>
+                            <h3>Spice Harbor</h3>
+                            <p>Fresh Flavors • Fast Service • Family Dining</p>
+                            <div className="social-links">
+                                <a href="#"><i className="fab fa-facebook"></i></a>
+                                <a href="#"><i className="fab fa-instagram"></i></a>
+                                <a href="#"><i className="fab fa-twitter"></i></a>
+                                <a href="#"><i className="fab fa-youtube"></i></a>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3>Quick Links</h3>
+                            <p>Menu</p>
+                            <p>About Us</p>
+                            <p>Reservations</p>
+                            <p>Contact</p>
+                        </div>
+
+                        <div>
+                            <h3>Hours</h3>
+                            <p>Monday - Friday: 11:00 AM - 11:00 PM</p>
+                            <p>Saturday - Sunday: 10:00 AM - 12:00 AM</p>
+                        </div>
+
+                        <div>
+                            <h3>Contact</h3>
+                            <p>📞 +91 9440368404</p>
+                            <p>📧 info@spiceharbor.com</p>
+                            <p>📍 Madhapur, Hyderabad</p>
+                        </div>
+                    </div>
+
+                    <div style={{ textAlign: 'center', marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                        <p>© 2024 Spice Harbor. All rights reserved.</p>
+                    </div>
+                </footer>
+            );
+        }
+
+        // Main App Component
+        function App() {
+            const [darkMode, setDarkMode] = useState(false);
+            const [currentPage, setCurrentPage] = useState('home');
+            const [cart, setCart] = useState([]);
+            const [showToast, setShowToast] = useState(false);
+
+            useEffect(() => {
+                const savedCart = localStorage.getItem('cart');
+                if (savedCart) {
+                    setCart(JSON.parse(savedCart));
+                }
+
+                const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+                setDarkMode(savedDarkMode);
+            }, []);
+
+            useEffect(() => {
+                if (darkMode) {
+                    document.body.classList.add('dark-mode');
+                } else {
+                    document.body.classList.remove('dark-mode');
+                }
+                localStorage.setItem('darkMode', darkMode);
+            }, [darkMode]);
+
+            useEffect(() => {
+                localStorage.setItem('cart', JSON.stringify(cart));
+            }, [cart]);
+
+            const toggleDarkMode = () => setDarkMode(!darkMode);
+
+            const addToCart = (item) => {
+                const existingItem = cart.find(i => i.id === item.id);
+                if (existingItem) {
+                    setCart(cart.map(i => 
+                        i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
+                    ));
+                } else {
+                    setCart([...cart, { ...item, quantity: 1 }]);
+                }
+                
+                setShowToast(true);
+                setTimeout(() => setShowToast(false), 2000);
+            };
+
+            const updateQuantity = (id, change) => {
+                setCart(cart.map(item => {
+                    if (item.id === id) {
+                        const newQty = item.quantity + change;
+                        return newQty > 0 ? { ...item, quantity: newQty } : null;
+                    }
+                    return item;
+                }).filter(Boolean));
+            };
+
+            const removeFromCart = (id) => {
+                setCart(cart.filter(item => item.id !== id));
+            };
+
+            const clearCart = () => {
+                setCart([]);
+            };
+
+            const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+            return (
+                <>
+                    <Navbar 
+                        darkMode={darkMode} 
+                        toggleDarkMode={toggleDarkMode}
+                        currentPage={currentPage}
+                        setCurrentPage={setCurrentPage}
+                        cartCount={cartCount}
+                    />
+
+                    {currentPage === 'home' && (
+                        <>
+                            <Hero setCurrentPage={setCurrentPage} />
+                            <div className="section">
+                                <div className="section-header">
+                                    <h2>Featured Items</h2>
+                                    <p>Try our most popular dishes</p>
+                                </div>
+                                <div className="menu-grid">
+                                    {todaysSpecial.map(item => (
+                                        <MenuCard key={item.id} item={item} addToCart={addToCart} />
+                                    ))}
+                                </div>
+                            </div>
+                        </>
+                    )}
+                    {currentPage === 'menu' && <MenuPage addToCart={addToCart} />}
+                    {currentPage === 'special' && <TodaysSpecialPage addToCart={addToCart} />}
+                    {currentPage === 'about' && <AboutPage />}
+                    {currentPage === 'cart' && (
+                        <CartPage 
+                            cart={cart} 
+                            updateQuantity={updateQuantity}
+                            removeFromCart={removeFromCart}
+                            setCurrentPage={setCurrentPage}
+                        />
+                    )}
+                    {currentPage === 'checkout' && (
+                        <CheckoutPage 
+                            cart={cart}
+                            clearCart={clearCart}
+                            setCurrentPage={setCurrentPage}
+                        />
+                    )}
+                    {currentPage === 'reservation' && <ReservationPage />}
+                    {currentPage === 'contact' && <ContactPage />}
+
+                    <Footer />
+
+                    <button 
+                        className="floating-cart-btn"
+                        onClick={() => setCurrentPage('cart')}
+                    >
+                        <i className="fas fa-shopping-cart"></i>
+                        {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+                    </button>
+
+                    {showToast && (
+                        <div className="toast">
+                            <i className="fas fa-check-circle"></i> Added to cart!
+                        </div>
+                    )}
+                </>
+            );
+        }
+
+        // Render App
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
